@@ -14,7 +14,7 @@ namespace Application.Infrastructure.Persistence
         public DbSet<ColorType> ColorTypes { get; set; }
         public DbSet<FuelType> FuelTypes { get; set; }
         public DbSet<RentalPeriod> RentalPeriods { get; set; }
-        public DbSet<TireType> TierTypes { get; set; }
+        public DbSet<TireType> TireTypes { get; set; }
         public DbSet<TransmissionType> TransmissionTypes { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<VehicleBrand> VehicleBrands { get; set; }
