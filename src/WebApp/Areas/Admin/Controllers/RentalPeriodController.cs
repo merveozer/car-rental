@@ -1,4 +1,5 @@
 ﻿using Application.Services;
+using Application.Services.Concrete;
 using Domain.DTOs;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -12,44 +13,42 @@ namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("admin/[controller]/[action]")]
-    public class ColorTypeController : Controller
-    {
-        public ColorTypeController(IColorTypeService colorTypeService)
+    public class RentalPeriodController : Controller
+    {   
+        public RentalPeriodController(IRentalPeriodService rentalPeriodService)
         {
-            ColorTypeService = colorTypeService;
+            RentalPeriodService = rentalPeriodService;
         }
+        private IRentalPeriodService RentalPeriodService { get; }
 
-        private IColorTypeService ColorTypeService { get; }
-
-
-        // GET: ColorTypeController
+        // GET: RentalPeriodController
         public ActionResult Index()
         {
-            ColorTypeFilter filter = new ColorTypeFilter();
-            var items = ColorTypeService.Get(filter);
+            RentalPeriodFilter filter = new RentalPeriodFilter();
+            var items = RentalPeriodService.Get(filter);
             return View(items);
         }
 
-        // GET: ColorTypeController/Details/5
+        // GET: RentalPeriodController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: ColorTypeController/Create
+        // GET: RentalPeriodController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ColorTypeController/Create
+        // POST: RentalPeriodController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ColorType colorType)
+        public ActionResult Create(RentalPeriod rentalPeriod)
         {
             try
             {
-                var response = ColorTypeService.Add(colorType);
+                var response = RentalPeriodService.Add(rentalPeriod);
                 if (!response.IsSuccess)
                 {
                     ViewBag.Response = response;
@@ -62,23 +61,23 @@ namespace WebApp.Areas.Admin.Controllers
             }
         }
 
-        // GET: ColorTypeController/Edit/5
+        // GET: RentalPeriodController/Edit/5
         public ActionResult Edit(int id)
         {
-            var item = ColorTypeService.GetById(id);
+            var item = RentalPeriodService.GetById(id);
             return View(item);
         }
 
-        // POST: ColorTypeController/Edit/5
+        // POST: RentalPeriodController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, ColorType colorType)
+        public ActionResult Edit(int id, RentalPeriod rentalPeriod)
         {
             try
             {
-                var response = ColorTypeService.Update(colorType);
+                var response = RentalPeriodService.Update(rentalPeriod);
                 ViewBag.Response = response;
-                return View(colorType);
+                return View(rentalPeriod);
             }
             catch
             {
@@ -86,21 +85,21 @@ namespace WebApp.Areas.Admin.Controllers
             }
         }
 
-        // GET: ColorTypeController/Delete/5
+        // GET: RentalPeriodController/Delete/5
         public ActionResult Delete(int id)
         {
-            var item = ColorTypeService.GetById(id);
+            var item = RentalPeriodService.GetById(id);
             return View(item);
         }
 
-        // POST: ColorTypeController/Delete/5
+        // POST: RentalPeriodController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {
-                ColorTypeService.Delete(id);
+                RentalPeriodService.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

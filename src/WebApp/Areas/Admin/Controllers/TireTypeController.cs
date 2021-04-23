@@ -1,4 +1,5 @@
 ﻿using Application.Services;
+using Application.Services.Concrete;
 using Domain.DTOs;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -12,44 +13,44 @@ namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("admin/[controller]/[action]")]
-    public class ColorTypeController : Controller
+    public class TireTypeController : Controller
+
     {
-        public ColorTypeController(IColorTypeService colorTypeService)
+        public ITireTypeService TireTypeService { get; }
+
+        public TireTypeController(ITireTypeService tireTypeService)
         {
-            ColorTypeService = colorTypeService;
+            TireTypeService = tireTypeService;
         }
 
-        private IColorTypeService ColorTypeService { get; }
-
-
-        // GET: ColorTypeController
+        // GET: TireTypeController
         public ActionResult Index()
         {
-            ColorTypeFilter filter = new ColorTypeFilter();
-            var items = ColorTypeService.Get(filter);
+            TireTypeFilter filter = new TireTypeFilter();
+            var items = TireTypeService.Get(filter);
             return View(items);
         }
 
-        // GET: ColorTypeController/Details/5
+        // GET: TireTypeController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: ColorTypeController/Create
+        // GET: TireTypeController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ColorTypeController/Create
+        // POST: TireTypeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ColorType colorType)
+        public ActionResult Create(TireType tireType)
         {
             try
             {
-                var response = ColorTypeService.Add(colorType);
+                var response = TireTypeService.Add(tireType);
                 if (!response.IsSuccess)
                 {
                     ViewBag.Response = response;
@@ -62,23 +63,23 @@ namespace WebApp.Areas.Admin.Controllers
             }
         }
 
-        // GET: ColorTypeController/Edit/5
+        // GET: TireTypeController/Edit/5
         public ActionResult Edit(int id)
         {
-            var item = ColorTypeService.GetById(id);
+            var item = TireTypeService.GetById(id);
             return View(item);
         }
 
-        // POST: ColorTypeController/Edit/5
+        // POST: TireTypeController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, ColorType colorType)
+        public ActionResult Edit(int id, TireType tireType)
         {
             try
             {
-                var response = ColorTypeService.Update(colorType);
+                var response = TireTypeService.Update(tireType);
                 ViewBag.Response = response;
-                return View(colorType);
+                return View(tireType);
             }
             catch
             {
@@ -86,21 +87,21 @@ namespace WebApp.Areas.Admin.Controllers
             }
         }
 
-        // GET: ColorTypeController/Delete/5
+        // GET: TireTypeController/Delete/5
         public ActionResult Delete(int id)
         {
-            var item = ColorTypeService.GetById(id);
+            var item = TireTypeService.GetById(id);
             return View(item);
         }
 
-        // POST: ColorTypeController/Delete/5
+        // POST: TireTypeController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {
-                ColorTypeService.Delete(id);
+                TireTypeService.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
