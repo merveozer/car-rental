@@ -31,7 +31,6 @@ namespace WebApp
             services.AddScoped<ICarRentalDbContext>(provider => provider.GetService<CarRentalDbContext>());
             services.AddScoped<IVehicleBrandService, VehicleBrandService>();
             services.AddScoped<IVehicleModelService, VehicleModelService>();
-            services.AddScoped<IColorTypeService, ColorTypeService>();
         }
 
         private int VehicleBrandService()
