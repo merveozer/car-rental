@@ -35,6 +35,7 @@ namespace WebApp
             services.AddScoped<IFuelTypeService, FuelTypeService>();
             services.AddScoped<IRentalPeriodService, RentalPeriodService>();
             services.AddScoped<ITireTypeService, TireTypeService>();
+            services.AddScoped<ITransmissionTypeService, TransmissionTypeService>();
         }
 
         private int VehicleBrandService()
