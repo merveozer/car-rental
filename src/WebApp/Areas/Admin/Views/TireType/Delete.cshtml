@@ -1,0 +1,30 @@
+﻿@model Domain.Entities.TireType
+
+@{
+    ViewData["Title"] = "Tekerlek Tipi Silme";
+
+}
+
+<h1>Tekerlek Tipi Silme</h1>
+
+<h3>Tekerlek tipini silmek istediğinize emin misiniz?</h3>
+<div>
+    <h4>Tekerlek Tipi</h4>
+    <hr />
+    <dl class="row">
+       
+      
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        @Html.HiddenFor(model => model.Id)
+        <input type="submit" value="Sil" class="btn btn-danger" /> |
+        <a asp-action="Index">Tekerlek Tipi Listesi</a>
+    </form>
+</div>

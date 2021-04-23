@@ -13,16 +13,16 @@ namespace WebApp.Areas.Admin.Controllers
     [Area("Admin")]
     [Route("admin/[controller]/[action]")]
     public class FuelTypeController : Controller
-    { 
-
+    {
         private IFuelTypeService FuelTypeService { get; }
+
         public FuelTypeController(IFuelTypeService fuelTypeService)
         {
 
-        FuelTypeService = fuelTypeService;    
+            FuelTypeService = fuelTypeService;    
             
         }
-    
+       
         // GET: FuelTypeController
         public ActionResult Index()
         {

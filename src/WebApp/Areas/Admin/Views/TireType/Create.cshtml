@@ -1,24 +1,26 @@
-﻿@model Domain.Entities.FuelType
+﻿@model Domain.Entities.TireType
 
 @{
-    ViewData["Title"] = "Yakıt Tipi Düzenleme";
+    ViewData["Title"] = "Tekerlek Tipi ";
     Response response = ViewBag.Response;
 }
 
-<h1>Yaıt Tipi Düzenleme</h1>
+<h1>Yeni Tekerlek Tipi</h1>
 
-<h4>Yakıt Tipi</h4>
+<h4>Tekerlek Tipi</h4>
+
 <hr />
 
 @if (response != null)
 {
     <message-box is-success="@response.IsSuccess" message="@response.Message"></message-box>
-} 
+}
+
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @Html.HiddenFor(x => x.Id)
+
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -32,7 +34,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Yakıt Tipi Listesi</a>
+    <a asp-action="Index">Tekerlek Tipi Listesi</a>
 </div>
 
 @section Scripts {
