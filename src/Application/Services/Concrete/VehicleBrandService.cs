@@ -1,59 +1,80 @@
 ﻿using Application.Infrastructure.Persistence;
+using Application.Services.Common;
 using Domain.DTOs;
 using Domain.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services.Concrete
 {
-    public class VehicleBrandService : IVehicleBrandService
+    public class VehicleBrandService : BaseService, IVehicleBrandService
     {
-
-        private ICarRentalDbContext Context { get; }
-        public VehicleBrandService(CarRentalDbContext context)
+        public VehicleBrandService(ICarRentalDbContext context) : base(context)
         {
-            Context = (ICarRentalDbContext)context;
+   
         }
-        public void Add(VehicleBrand vehicleBrand)
+
+        public Response Add(VehicleBrand vehicleBrand)
         {
+            var checkResponse = CheckToAddOrUpdate(vehicleBrand);
+            if (!checkResponse.IsSuccess)
+                return checkResponse;
+
             Context.VehicleBrand.Add(vehicleBrand);
             Context.SaveChanges();
+
+            return Response.Success("Marka başarıyla kaydedildi");
+        }
+        private Response CheckToAddOrUpdate(VehicleBrand vehicleBrand)
+        {
+            int sameNumberOfRecords = (from b in Context.VehicleBrand
+                                       where b.Name == vehicleBrand.Name && b.Id != vehicleBrand.Id
+                                       select b
+                                       ).Count();
+            if (sameNumberOfRecords > 0)
+            {
+                return Response.Fail($"{vehicleBrand.Name} markası sistemde zaten kayıtlıdır.");
+            }
+            return Response.Success();
+        }
+        public Response Update(VehicleBrand vehicleBrand)
+        {
+            var checkResponse = CheckToAddOrUpdate(vehicleBrand);
+            if (!checkResponse.IsSuccess)
+                return checkResponse;
+
+            var vehicleBrandToUpdate = GetById(vehicleBrand.Id);
+            vehicleBrandToUpdate.Name = vehicleBrand.Name;
+            Context.SaveChanges();
+
+            return Response.Success("Marka başarıyla güncellendi");
+        }
+        public Response Delete(int id)
+        {
+            var vehicleBrandToDelete = GetById(id);
+            Context.VehicleBrand.Remove(vehicleBrandToDelete);
+            Context.SaveChanges();
+
+            return Response.Success("Marka başarıyla silindi");
         }
 
         public VehicleBrand GetById(int id)
         {
             return Context.VehicleBrand.Where(v => v.Id == id).SingleOrDefault();
         }
-
-        public void Update (VehicleBrand vehicleBrand)
-        {
-            var vehicleBrandToUpdate = GetById(vehicleBrand.Id);
-            vehicleBrandToUpdate.Name = vehicleBrand.Name;
-            Context.SaveChanges();
-        }
-
-        public void Delete(int id)
-        {
-            var vehicleBrandToDelete = GetById(id);
-            Context.VehicleBrand.Remove(vehicleBrandToDelete);
-            Context.SaveChanges();
-        }
-
-        public List<VehicleBrand>Get(VehicleBrandFilter vehicleBrandFilter)
+        public List<VehicleBrand> Get(VehicleBrandFilter filter)
         {
             var items = (from v in Context.VehicleBrand
-                where v.Name.StartsWith(vehicleBrandFilter.Name)
-                orderby v.Name
-                select v).ToList();
+                         where v.Name.StartsWith(filter.Name)
+                         orderby v.Name
+                         select v).ToList();
             return items;
         }
+
+
         public string GetName()
         {
             return "Vehicle brand service";
         }
     }
-
 }

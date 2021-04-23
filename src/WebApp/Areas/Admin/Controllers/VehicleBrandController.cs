@@ -1,5 +1,4 @@
 ﻿using Application.Services;
-using Application.Services.Concrete;
 using Domain.DTOs;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -15,12 +14,14 @@ namespace WebApp.Areas.Admin.Controllers
     [Route("admin/[controller]/[action]")]
     public class VehicleBrandController : Controller
     {
-       
         private IVehicleBrandService VehicleBrandService { get; }
-        public VehicleBrandController (IVehicleBrandService vehicleBrandService)
+
+        public VehicleBrandController(IVehicleBrandService vehicleBrandService)
         {
             VehicleBrandService = vehicleBrandService;
         }
+
+        // GET: VehicleBrandController
         public ActionResult Index()
         {
             VehicleBrandFilter filter = new VehicleBrandFilter();
@@ -47,8 +48,12 @@ namespace WebApp.Areas.Admin.Controllers
         {
             try
             {
-                VehicleBrandService.Add(vehicleBrand);
-                return RedirectToAction(nameof(Index));
+                var response = VehicleBrandService.Add(vehicleBrand);
+                if (!response.IsSuccess)
+                {
+                    ViewBag.Response = response;
+                }
+                return View();
             }
             catch
             {
@@ -59,7 +64,8 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: VehicleBrandController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var item = VehicleBrandService.GetById(id);
+            return View(item);
         }
 
         // POST: VehicleBrandController/Edit/5
@@ -69,8 +75,9 @@ namespace WebApp.Areas.Admin.Controllers
         {
             try
             {
-                VehicleBrandService.Update(vehicleBrand);
-                return RedirectToAction(nameof(Index));
+                var response = VehicleBrandService.Update(vehicleBrand);
+                ViewBag.Response = response;
+                return View(vehicleBrand);
             }
             catch
             {
@@ -82,7 +89,7 @@ namespace WebApp.Areas.Admin.Controllers
         public ActionResult Delete(int id)
         {
             var item = VehicleBrandService.GetById(id);
-            return View();
+            return View(item);
         }
 
         // POST: VehicleBrandController/Delete/5
