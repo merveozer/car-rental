@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace WebApp
             services.AddDbContext<CarRentalDbContext>();
             services.AddScoped<ICarRentalDbContext>(provider => provider.GetService<CarRentalDbContext>());
             services.AddScoped<IVehicleBrandService, VehicleBrandService>();
+            services.AddScoped<IVehicleModelService, VehicleModelService>();
         }
 
         private int VehicleBrandService()

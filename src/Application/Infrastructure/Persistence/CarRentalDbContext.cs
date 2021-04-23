@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -18,13 +13,13 @@ namespace Application.Infrastructure.Persistence
         public DbSet<TransmissionType> TransmissionType { get; set; }
         public DbSet<Vehicle> Vehicle { get; set; }
         public DbSet<VehicleBrand> VehicleBrand { get; set; }
-
         public DbSet<VehicleClassType> VehicleClassType { get; set; }
         public DbSet<VehicleModel> VehicleModel { get; set; }
         public DbSet<VehicleRentalPrice> VehicleRentalPrice { get; set; }
 
         private readonly string _connectionString;
-        public CarRentalDbContext(DbContextOptions<CarRentalDbContext> options, IConfiguration configuration): base(options)
+
+        public CarRentalDbContext(DbContextOptions<CarRentalDbContext> options, IConfiguration configuration) : base(options)
         {
             _connectionString = configuration.GetConnectionString("CarRentalConnectionString");
         }
@@ -33,10 +28,9 @@ namespace Application.Infrastructure.Persistence
         {
             if (optionsBuilder.IsConfigured == false)
             {
-                //string connectionString = "Server=.;Database=CarRental;Trusted_Connection=True;";
+                //string connectionString = "Server=.\\SQL2019DEV;Database=CarRental;Trusted_Connection=true;";
                 base.OnConfiguring(optionsBuilder.UseSqlServer(_connectionString));
             }
         }
-
     }
 }
