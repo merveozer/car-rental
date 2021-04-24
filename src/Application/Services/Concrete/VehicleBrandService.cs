@@ -27,6 +27,7 @@ namespace Application.Services.Concrete
         }
         private Response CheckToAddOrUpdate(VehicleBrand vehicleBrand)
         {
+            bool isUpdate = vehicleBrand.Id > 0;
             int sameNumberOfRecords = (from b in Context.VehicleBrand
                                        where b.Name == vehicleBrand.Name && b.Id != vehicleBrand.Id
                                        select b
@@ -34,6 +35,25 @@ namespace Application.Services.Concrete
             if (sameNumberOfRecords > 0)
             {
                 return Response.Fail($"{vehicleBrand.Name} markası sistemde zaten kayıtlıdır.");
+            }
+
+            if (isUpdate)
+            {
+                int numberOfModels = Context.VehicleModel.Where(m => m.VehicleBrandId == vehicleBrand.Id).Count();
+                if(numberOfModels > 0)
+                {
+                    return Response.Fail($"{vehicleBrand.Name} markasına ait {numberOfModels} adet model olduğu için bu kayıt silinemez.");
+                }
+            }
+            return Response.Success();
+        }
+
+        public Response CheckToDelete(VehicleBrand vehicleBrand)
+        {
+            int numberOfModels = Context.VehicleModel.Where(m => m.VehicleBrandId == vehicleBrand.Id).Count();
+            if (numberOfModels > 0)
+            {
+                return Response.Fail($"{vehicleBrand.Name} markasına ait {numberOfModels} adet model olduğu için bu kayıt silinemez.");
             }
             return Response.Success();
         }
@@ -52,6 +72,10 @@ namespace Application.Services.Concrete
         public Response Delete(int id)
         {
             var vehicleBrandToDelete = GetById(id);
+            var checkResponse = CheckToDelete(vehicleBrandToDelete);
+            if (!checkResponse.IsSuccess)
+                return checkResponse;
+
             Context.VehicleBrand.Remove(vehicleBrandToDelete);
             Context.SaveChanges();
 
