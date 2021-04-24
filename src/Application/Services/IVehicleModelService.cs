@@ -15,6 +15,7 @@ namespace Application.Services
         Response Update(VehicleModel vehicleModel);
         Response Delete(int id);
         VehicleModel GetById(int id);
-        List<VehicleModel> Get(VehicleModelFilter filter);
+        List<VehicleModelDTO> Get(VehicleModelFilter filter);
+        VehicleModelDTO GetDetail(int id);
     }
 }
