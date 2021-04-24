@@ -14,7 +14,7 @@ namespace Application.Infrastructure.Persistence
         DbSet<VehicleBrand> VehicleBrand { get; set; }
         DbSet<VehicleClassType> VehicleClassType { get; set; }
         DbSet<VehicleModel> VehicleModel { get; set; }
-        DbSet<VehicleRentalPrice> VehicleRentalPrice { get; set; }
+        //DbSet<VehicleRentalPrice> VehicleRentalPrice { get; set; }
 
         int SaveChanges();
     }

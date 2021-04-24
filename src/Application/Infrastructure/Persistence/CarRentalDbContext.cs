@@ -15,7 +15,7 @@ namespace Application.Infrastructure.Persistence
         public DbSet<VehicleBrand> VehicleBrand { get; set; }
         public DbSet<VehicleClassType> VehicleClassType { get; set; }
         public DbSet<VehicleModel> VehicleModel { get; set; }
-        public DbSet<VehicleRentalPrice> VehicleRentalPrice { get; set; }
+        //public DbSet<VehicleRentalPrice> VehicleRentalPrice { get; set; }
 
         private readonly string _connectionString;
 
