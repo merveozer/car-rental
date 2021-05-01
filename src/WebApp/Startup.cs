@@ -37,9 +37,7 @@ namespace WebApp
             services.AddScoped<ITireTypeService, TireTypeService>();
             services.AddScoped<ITransmissionTypeService, TransmissionTypeService>();
             services.AddScoped<IVehicleClassTypeService, VehicleClassTypeService>();
-            services.AddScoped<IVehicleService, VehicleService>();
-
-
+           
         }
 
         private int VehicleBrandService()
