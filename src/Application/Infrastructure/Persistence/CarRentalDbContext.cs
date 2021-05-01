@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Services.Concrete;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -10,6 +11,7 @@ namespace Application.Infrastructure.Persistence
         public DbSet<FuelType> FuelType { get; set; }
         public DbSet<RentalPeriod> RentalPeriod { get; set; }
         public DbSet<TireType> TireType { get; set; }
+        public DbSet<VehicleRentalPrice> VehicleRentalPrice { get; set; }
         public DbSet<TransmissionType> TransmissionType { get; set; }
         public DbSet<Vehicle> Vehicle { get; set; }
         public DbSet<VehicleBrand> VehicleBrand { get; set; }

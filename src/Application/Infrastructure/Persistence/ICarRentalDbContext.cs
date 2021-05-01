@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Services.Concrete;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Infrastructure.Persistence
@@ -8,6 +9,7 @@ namespace Application.Infrastructure.Persistence
         DbSet<ColorType> ColorType { get; set; }
         DbSet<FuelType> FuelType { get; set; }
         DbSet<RentalPeriod> RentalPeriod { get; set; }
+        DbSet<VehicleRentalPrice> VehicleRentalPrice { get; set; }
         DbSet<TireType> TireType { get; set; }
         DbSet<TransmissionType> TransmissionType { get; set; }
         DbSet<Vehicle> Vehicle { get; set; }
