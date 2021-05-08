@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Application.Services;
 using Application.Services.Concrete;
 using Application.Infrastructure.Persistence;
+using Application;
 
 namespace WebApp
 {
@@ -39,7 +40,7 @@ namespace WebApp
             services.AddScoped<IVehicleClassTypeService, VehicleClassTypeService>();
             services.AddScoped<IVehicleService, VehicleService>();
 
-
+            services.AddApplicationServices();
         }
 
         private int VehicleBrandService()
