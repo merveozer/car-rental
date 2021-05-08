@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities
 {
@@ -53,5 +54,9 @@ namespace Domain.Entities
         public TireType TireType { get; set; }
         public VehicleClassType VehicleClassType { get; set; }
         public ColorType ColorType { get; set; }
+        public ICollection<VehicleImage> VehicleImage { get; set; }
+        public ICollection<VehicleRentalPrice> VehicleRentalPrice { get; set; }
+
+
     }
 }
