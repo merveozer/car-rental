@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApp.Models;
 
 namespace WebApp.Controllers
 {
@@ -19,6 +20,8 @@ namespace WebApp.Controllers
         private IFuelTypeService FuelTypeService { get; }
         private ITireTypeService TireTypeService { get; }
         private ITransmissionTypeService TransmissionTypeService { get; }
+        private IVehicleRentalPriceService VehicleRentalPriceService {get;}
+        private IVehicleImageService VehicleImageService { get; }
 
         public VehicleController(IVehicleService vehicleService,
                                  IVehicleModelService vehicleModelService,
@@ -26,7 +29,9 @@ namespace WebApp.Controllers
                                  IColorTypeService colorTypeService,
                                  IFuelTypeService fuelTypeService,
                                  ITireTypeService tireTypeService,
-                                 ITransmissionTypeService transmissionTypeService
+                                 ITransmissionTypeService transmissionTypeService,
+                                 IVehicleImageService vehicleImageService,
+                                 IVehicleRentalPriceService vehicleRentalPriceService
                                  )
         {
             VehicleService = vehicleService;
@@ -36,8 +41,20 @@ namespace WebApp.Controllers
             FuelTypeService = fuelTypeService;
             TireTypeService = tireTypeService;
             TransmissionTypeService = transmissionTypeService;
+            VehicleImageService = vehicleImageService;
+            VehicleRentalPriceService = vehicleRentalPriceService;
+
         }
 
+        public IActionResult Detail(int id)
+        {
+            VehicleDetailViewModel vehicleDetail = new VehicleDetailViewModel();
+            vehicleDetail.Vehicle = VehicleService.GetDetail(id);
+            vehicleDetail.VehicleImages = VehicleImageService.GetByVehicle(id);
+            vehicleDetail.VehicleRentalPrices = VehicleRentalPriceService.Get(new VehicleRentalPriceFilter(id, DateTime.Today));
+            ViewBag.VehicleDetail = vehicleDetail;
+            return View();
+        }
         private void SetParametersToViewBag()
         {
             ViewBag.VehicleModels = GetVehicleModels();
