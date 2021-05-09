@@ -62,6 +62,7 @@ namespace Application.Services.Concrete
                                         ||
                                         (p.StartDate <= vehicleRentalPrice.StartDate && p.EndDate >= vehicleRentalPrice.EndDate)
                                     )
+                                    && p.RentalPeriodId == vehicleRentalPrice.RentalPeriodId
                                  select p
                                 ).Count();
             if (numberOfRecordsInTheSameDateRange > 0)
