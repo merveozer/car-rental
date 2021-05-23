@@ -1,15 +1,15 @@
 ﻿@model WebApp.Areas.Admin.Models.VehicleViewModel
-
 @{
     ViewData["Title"] = "Araç İşlemleri";
     List<SelectListItem> vehicleModels = ViewBag.VehicleModels,
-                        vehicleClassTypes = ViewBag.VehicleClassTypes,
-                        colorTypes = ViewBag.ColorTypes,
-                        fuelTypes = ViewBag.FuelTypes,
-                        tireTypes = ViewBag.TireTypes,
-                        transmissionTypes = ViewBag.TransmissionTypes
-                        ;
+                         vehicleClassTypes = ViewBag.VehicleClassTypes,
+                         colorTypes = ViewBag.ColorTypes,
+                         fuelTypes = ViewBag.FuelTypes,
+                         tireTypes = ViewBag.TireTypes,
+                         transmissionTypes = ViewBag.TransmissionTypes
+                         ;
 }
+
 <h1>Araç İşlemleri</h1>
 
 <p>
@@ -42,31 +42,32 @@
             @Html.DropDownListFor(model => model.Filter.TireTypeId, tireTypes, "Tümü", new { @class = "form-control" })
         </div>
     </div>
-    <div class="from-row">
+    <div class="form-row">
         <div class="form-group col-md-6">
             <label asp-for="Filter.ProductionYearRange" class="control-label"></label>
-            <div class="input-grup">
+            <div class="input-group">
                 @Html.TextBoxFor(model => model.Filter.ProductionYearRange.Start, new { @class = "form-control" })
                 @Html.TextBoxFor(model => model.Filter.ProductionYearRange.End, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group col-md-6">
             <label asp-for="Filter.EngineDisplacementRange" class="control-label"></label>
-            <div class="input-grup">
+            <div class="input-group">
                 @Html.TextBoxFor(model => model.Filter.EngineDisplacementRange.Start, new { @class = "form-control" })
                 @Html.TextBoxFor(model => model.Filter.EngineDisplacementRange.End, new { @class = "form-control" })
             </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Filter.HorsepowerRange" class="control-label"></label>
+            <div class="input-group">
+                @Html.TextBoxFor(model => model.Filter.HorsepowerRange.Start, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.Filter.HorsepowerRange.End, new { @class = "form-control" })
             </div>
-            <div class="form-group col-md-6">
-                <label asp-for="Filter.HorsepowerRange" class="control-label"></label>
-                <div class="input-grup">
-                    @Html.TextBoxFor(model => model.Filter.HorsepowerRange.Start, new { @class = "form-control" })
-                    @Html.TextBoxFor(model => model.Filter.HorsepowerRange.End, new { @class = "form-control" })
-                </div>
-                </div>
-            </div>
+        </div>
+    </div>
     <button type="submit" class="btn btn-primary">Ara</button>
 </form>
+<hr />
 <table class="table">
     <thead>
         <tr>
@@ -114,6 +115,8 @@
                     @Html.DisplayFor(modelItem => item.ProductionYear)
                 </td>
                 <td>
+                    @Html.ActionLink("Fiyatlar", "Index", "VehicleRentalPrice", new { vehicleId = item.Id }) |
+                    @Html.ActionLink("Resimler", "Index", "VehicleImage", new { vehicleId = item.Id }) |
                     @Html.ActionLink("Düzenle", "Edit", new { id = item.Id }) |
                     @Html.ActionLink("Detay", "Details", new { id = item.Id }) |
                     @Html.ActionLink("Sil", "Delete", new { id = item.Id })

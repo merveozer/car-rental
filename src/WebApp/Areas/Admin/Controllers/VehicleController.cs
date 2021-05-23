@@ -1,7 +1,9 @@
 ﻿using Application.Services;
 using Application.Services.Concrete;
+using Domain.Constants;
 using Domain.DTOs;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,9 +15,13 @@ namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("admin/[controller]/[action]")]
+    [Authorize(AuthenticationSchemes = AuthenticationConstants.AuthenticationScheme,
+        Roles = AuthenticationConstants.OperationClaims.AdminStr)]
     public class VehicleController : Controller
     {
         private IVehicleService VehicleService { get; }
+        private IVehicleBrandService VehicleBrandService { get; }
+
         private IVehicleModelService VehicleModelService { get; }
         private IVehicleClassTypeService VehicleClassTypeService { get; }
         private IColorTypeService ColorTypeService { get; }
@@ -24,6 +30,7 @@ namespace WebApp.Areas.Admin.Controllers
         private ITransmissionTypeService TransmissionTypeService { get; }
 
         public VehicleController(IVehicleService vehicleService,
+                                 IVehicleBrandService vehicleBrandService,
                                  IVehicleModelService vehicleModelService,
                                  IVehicleClassTypeService vehicleClassTypeService,
                                  IColorTypeService colorTypeService,
@@ -33,6 +40,7 @@ namespace WebApp.Areas.Admin.Controllers
                                  )
         {
             VehicleService = vehicleService;
+            VehicleBrandService = vehicleBrandService;
             VehicleModelService = vehicleModelService;
             VehicleClassTypeService = vehicleClassTypeService;
             ColorTypeService = colorTypeService;

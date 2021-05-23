@@ -1,7 +1,9 @@
 ﻿using Application.Services;
 using Application.Services.Concrete;
+using Domain.Constants;
 using Domain.DTOs;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,6 +15,8 @@ namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("admin/[controller]/[action]")]
+    [Authorize(AuthenticationSchemes = AuthenticationConstants.AuthenticationScheme,
+        Roles = AuthenticationConstants.OperationClaims.AdminStr)]
     public class VehicleClassTypeController : Controller
     {
         public VehicleClassTypeController (IVehicleClassTypeService vehicleClassTypeService) 

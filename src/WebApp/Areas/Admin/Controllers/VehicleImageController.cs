@@ -1,5 +1,7 @@
 ﻿using Application.Services;
+using Domain.Constants;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,21 +12,19 @@ using WebApp.Areas.Admin.Models;
 
 namespace WebApp.Areas.Admin.Controllers
 {
-   
+    [Area("Admin")]
+    [Route("admin/[controller]/[action]")]
+    [Authorize(AuthenticationSchemes = AuthenticationConstants.AuthenticationScheme,
+        Roles = AuthenticationConstants.OperationClaims.AdminStr)]
     public class VehicleImageController : Controller
-
     {
-
         private IVehicleImageService VehicleImageService { get; }
         private IVehicleService VehicleService { get; }
 
-        // GET: VehicleImageController
-
-        public VehicleImageController (IVehicleImageService vehicleImageService, IVehicleService vehicleService)
+        public VehicleImageController(IVehicleImageService vehicleImageService, IVehicleService vehicleService)
         {
             VehicleImageService = vehicleImageService;
             VehicleService = vehicleService;
-
         }
 
         private void SetVehicleToViewBag(int vehicleId)
@@ -33,15 +33,14 @@ namespace WebApp.Areas.Admin.Controllers
             ViewBag.VehicleName = $"{vehicle?.VehicleBrandName} {vehicle?.VehicleModelName}";
             ViewBag.VehicleId = vehicleId;
         }
+
+        // GET: VehicleImageController
         public ActionResult Index(int vehicleId)
         {
             SetVehicleToViewBag(vehicleId);
             var items = VehicleImageService.GetByVehicle(vehicleId);
-
             return View(items);
         }
-
-     
 
         // GET: VehicleImageController/Create
         public ActionResult Create(int vehicleId)
@@ -49,7 +48,7 @@ namespace WebApp.Areas.Admin.Controllers
             VehicleImageViewModel model = new VehicleImageViewModel();
             model.VehicleId = vehicleId;
             SetVehicleToViewBag(vehicleId);
-            
+
             return View(model);
         }
 
@@ -64,21 +63,17 @@ namespace WebApp.Areas.Admin.Controllers
                 vehicleImage.VehicleId = model.VehicleId;
                 var response = await VehicleImageService.Add(vehicleImage, model.Image);
                 ViewBag.Response = response;
-
             }
             catch
             {
                 ViewBag.Response = Domain.DTOs.Response.Fail("Bir hata oluştu");
-
             }
             finally
             {
                 SetVehicleToViewBag(model.VehicleId);
             }
-
             return View(model);
         }
-
 
         // GET: VehicleImageController/Delete/5
         public ActionResult Delete(int id)
@@ -94,7 +89,6 @@ namespace WebApp.Areas.Admin.Controllers
         public ActionResult Delete(int id, IFormCollection collection)
         {
             var item = VehicleImageService.GetById(id);
-
             try
             {
                 var response = VehicleImageService.Delete(id);
@@ -102,13 +96,11 @@ namespace WebApp.Areas.Admin.Controllers
                     return RedirectToAction(nameof(Index), new { vehicleId = item.VehicleId });
                 else
                     ViewBag.Response = response;
-            
             }
             catch
             {
                 ViewBag.Response = Domain.DTOs.Response.Fail("Bir hata oluştu");
             }
-
             finally
             {
                 SetVehicleToViewBag(item.VehicleId);

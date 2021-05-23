@@ -12,6 +12,8 @@ using Application.Services;
 using Application.Services.Concrete;
 using Application.Infrastructure.Persistence;
 using Application;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Domain.Constants;
 
 namespace WebApp
 {
@@ -28,20 +30,19 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<CarRentalDbContext>();
-            services.AddScoped<ICarRentalDbContext>(provider => provider.GetService<CarRentalDbContext>());
-            services.AddScoped<IVehicleBrandService, VehicleBrandService>();
-            services.AddScoped<IVehicleModelService, VehicleModelService>();
-            services.AddScoped<IColorTypeService, ColorTypeService>();
-            services.AddScoped<IFuelTypeService, FuelTypeService>();
-            services.AddScoped<IRentalPeriodService, RentalPeriodService>();
-            services.AddScoped<ITireTypeService, TireTypeService>();
-            services.AddScoped<ITransmissionTypeService, TransmissionTypeService>();
-            services.AddScoped<IVehicleClassTypeService, VehicleClassTypeService>();
-            services.AddScoped<IVehicleService, VehicleService>();
-            services.AddScoped<IVehicleRentalPriceService, VehicleRentalPriceService>();
+            
 
             services.AddApplicationServices();
+
+
+            services.AddAuthentication(AuthenticationConstants.AuthenticationScheme)
+                .AddCookie(o =>
+                {
+                    o.Cookie.Name = "Rentacar";
+                    o.ExpireTimeSpan = new TimeSpan(0, 10, 0);    //belli bir süre sonra (bu örnek için 0 saat 10 dakika 0 saniye sonra) çýkýþ yapýp oturumu kapatýyor...
+                    o.LoginPath = "/auth/login";
+
+                });        
         }
 
         private int VehicleBrandService()
@@ -65,6 +66,8 @@ namespace WebApp
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {

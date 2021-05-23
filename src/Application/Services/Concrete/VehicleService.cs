@@ -200,9 +200,9 @@ namespace Application.Services.Concrete
             return items;
         }
 
-        public List<VehicleListItemDTO> GetListItemDTOs(VehicleFilter filter)
-        {
-            throw new NotImplementedException();
-        }
+        //public List<VehicleListItemDTO> GetListItemDTOs(VehicleFilter filter)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
