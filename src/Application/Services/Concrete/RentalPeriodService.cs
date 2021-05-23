@@ -19,9 +19,27 @@ namespace Application.Services.Concrete
 
         public Response Add(RentalPeriod rentalPeriod)
         {
+            var checkResponse = CheckToAddOrUpdate(rentalPeriod);
+            if (!checkResponse.IsSuccess)
+                return checkResponse;
+
             Context.RentalPeriod.Add(rentalPeriod);
             Context.SaveChanges();
             return Response.Success("Kiralama dönemi başarıyla kaydedildi.");
+        }
+
+        private Response CheckToAddOrUpdate(RentalPeriod rentalPeriod)
+        {
+            int sameNumberOfRecords = (from b in Context.RentalPeriod
+                                       where b.Name == rentalPeriod.Name && b.Id != rentalPeriod.Id
+                                       select b).Count();
+            if (sameNumberOfRecords > 0)
+            {
+                return Response.Fail($"{rentalPeriod.Name} kiralama periyodu sistemde zaten kayıtlıdır.");
+
+            }
+
+            return Response.Success();
         }
 
         public Response Delete(int id)
@@ -35,6 +53,7 @@ namespace Application.Services.Concrete
         public List<RentalPeriod> Get(RentalPeriodFilter filter)
         {
             var items = (from r in Context.RentalPeriod
+                         where r.Name.StartsWith(filter.Name)
                          orderby r.Name
                          select r).ToList();
             return items;
@@ -47,6 +66,10 @@ namespace Application.Services.Concrete
 
         public Response Update(Domain.Entities.RentalPeriod rentalPeriod)
         {
+            var checkResponse = CheckToAddOrUpdate(rentalPeriod);
+            if (!checkResponse.IsSuccess)
+                return checkResponse;
+
             var rentalPeriodToUpdate = GetById(rentalPeriod.Id);
             rentalPeriodToUpdate.Name = rentalPeriod.Name;
             Context.SaveChanges();

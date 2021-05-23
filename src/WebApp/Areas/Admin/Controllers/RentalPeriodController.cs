@@ -1,7 +1,10 @@
 ﻿using Application.Services;
 using Application.Services.Concrete;
+using Domain.Constants;
 using Domain.DTOs;
 using Domain.Entities;
+using Google.Apis.Admin.Directory.directory_v1.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,6 +16,8 @@ namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("admin/[controller]/[action]")]
+    [Authorize(AuthenticationSchemes = AuthenticationConstants.AuthenticationScheme,
+        Roles = AuthenticationConstants.OperationClaims.AdminStr)]
     public class RentalPeriodController : Controller
     {   
         public RentalPeriodController(IRentalPeriodService rentalPeriodService)
@@ -29,12 +34,6 @@ namespace WebApp.Areas.Admin.Controllers
             return View(items);
         }
 
-        // GET: RentalPeriodController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: RentalPeriodController/Create
         public ActionResult Create()
         {
@@ -49,10 +48,7 @@ namespace WebApp.Areas.Admin.Controllers
             try
             {
                 var response = RentalPeriodService.Add(rentalPeriod);
-                if (!response.IsSuccess)
-                {
-                    ViewBag.Response = response;
-                }
+                ViewBag.Response = response;
                 return View();
             }
             catch

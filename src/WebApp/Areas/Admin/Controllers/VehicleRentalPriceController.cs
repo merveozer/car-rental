@@ -8,11 +8,15 @@ using Application.Services;
 using Domain.DTOs;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Domain.Constants;
 
 namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("admin/[controller]/[action]")]
+    [Authorize(AuthenticationSchemes = AuthenticationConstants.AuthenticationScheme,
+        Roles = AuthenticationConstants.OperationClaims.AdminStr)]
     public class VehicleRentalPriceController : Controller
     {
         private IVehicleRentalPriceService VehicleRentalPriceService { get; }

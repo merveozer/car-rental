@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApp.Areas.Admin.Controllers;
 using WebApp.Models;
 
 namespace WebApp.Controllers
@@ -20,8 +21,8 @@ namespace WebApp.Controllers
         private IFuelTypeService FuelTypeService { get; }
         private ITireTypeService TireTypeService { get; }
         private ITransmissionTypeService TransmissionTypeService { get; }
-        private IVehicleRentalPriceService VehicleRentalPriceService {get;}
         private IVehicleImageService VehicleImageService { get; }
+        private IVehicleRentalPriceService VehicleRentalPriceService { get; }
 
         public VehicleController(IVehicleService vehicleService,
                                  IVehicleModelService vehicleModelService,
@@ -31,8 +32,7 @@ namespace WebApp.Controllers
                                  ITireTypeService tireTypeService,
                                  ITransmissionTypeService transmissionTypeService,
                                  IVehicleImageService vehicleImageService,
-                                 IVehicleRentalPriceService vehicleRentalPriceService
-                                 )
+                                 IVehicleRentalPriceService vehicleRentalPriceService)
         {
             VehicleService = vehicleService;
             VehicleModelService = vehicleModelService;
@@ -43,18 +43,60 @@ namespace WebApp.Controllers
             TransmissionTypeService = transmissionTypeService;
             VehicleImageService = vehicleImageService;
             VehicleRentalPriceService = vehicleRentalPriceService;
+        }
 
+        public IActionResult Index()
+        {
+            VehicleFilter filter = new VehicleFilter();
+            var items = VehicleService.GetListItems(filter);
+            ViewBag.Vehicles = items;
+            SetParametersToViewBag();
+            return View(filter);
+        }
+
+        [HttpPost]
+        public IActionResult Index(VehicleFilter filter)
+        {
+            var items = VehicleService.GetListItems(filter);
+            ViewBag.Vehicles = items;
+            SetParametersToViewBag();
+            return View(filter);
         }
 
         public IActionResult Detail(int id)
+        {
+            SetVehicleDetailToViewBag(id);
+
+            RentVehicleDTO model = new RentVehicleDTO();
+            model.VehicleId = id;
+            return View("Detail", model);
+        }
+
+        [HttpPost]
+        public IActionResult Calculate(RentVehicleDTO model)
+        {
+            SetVehicleDetailToViewBag(model.VehicleId);
+            model.Amount = 500;
+            return View("Detail", model);
+        }
+
+        [HttpPost]
+        public IActionResult Rent(RentVehicleDTO model)
+        {
+            SetVehicleDetailToViewBag(model.VehicleId);
+            return View();
+        }
+
+        private void SetVehicleDetailToViewBag(int id)
         {
             VehicleDetailViewModel vehicleDetail = new VehicleDetailViewModel();
             vehicleDetail.Vehicle = VehicleService.GetDetail(id);
             vehicleDetail.VehicleImages = VehicleImageService.GetByVehicle(id);
             vehicleDetail.VehicleRentalPrices = VehicleRentalPriceService.Get(new VehicleRentalPriceFilter(id, DateTime.Today));
             ViewBag.VehicleDetail = vehicleDetail;
-            return View();
         }
+
+
         private void SetParametersToViewBag()
         {
             ViewBag.VehicleModels = GetVehicleModels();
@@ -88,24 +130,5 @@ namespace WebApp.Controllers
         {
             return TransmissionTypeService.Get(new TransmissionTypeFilter()).Select(t => new SelectListItem(t.Name, t.Id.ToString())).ToList();
         }
-    
-        public IActionResult Index()
-        {
-            VehicleFilter filter = new VehicleFilter();
-            var items = VehicleService.GetListItems(filter);
-            ViewBag.Vehicles = items;
-            SetParametersToViewBag();
-            return View(filter);
-            
-        }
-
-        [HttpPost] //post işleminde hangi verileri almam lazım ne göndermem lazım bu sorunun cevabı modelini belirler
-        public IActionResult Index(VehicleFilter filter)
-        {
-            var items = VehicleService.GetListItems(filter);
-            ViewBag.Vehicles = items;
-            return View(filter);
-        }
-
     }
 }

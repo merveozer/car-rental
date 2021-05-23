@@ -1,6 +1,9 @@
 ﻿using Application.Services;
+using Domain.Constants;
 using Domain.DTOs;
 using Domain.Entities;
+using Google.Apis.Admin.Directory.directory_v1.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,6 +15,8 @@ namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("admin/[controller]/[action]")]
+    [Authorize(AuthenticationSchemes = AuthenticationConstants.AuthenticationScheme,
+        Roles = AuthenticationConstants.OperationClaims.AdminStr)]
     public class TransmissionTypeController : Controller
     {
         public TransmissionTypeController(ITransmissionTypeService transmissionTypeService)
