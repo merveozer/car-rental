@@ -19,6 +19,8 @@ namespace Application.Infrastructure.Persistence
         DbSet<VehicleImage> VehicleImage { get; set; }
         //DbSet<VehicleRentalPrice> VehicleRentalPrice { get; set; }
 
+        DbSet<RentVehicle> RentVehicle { get; set; }
+
         DbSet<User> User {get; set;}
         DbSet<OperationClaim> OperationClaim { get; set; }
         DbSet<UserOperationClaim> UserOperationClaim { get; set; }

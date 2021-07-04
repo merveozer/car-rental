@@ -1,15 +1,20 @@
 ﻿@model RentVehicleDTO
 
-@{ 
+@{
     VehicleDetailViewModel vehicleDetail = ViewBag.VehicleDetail;
-
+    Response response = ViewBag.Response;
+         
 
 }
 
 <div class="row">
     <h1>@vehicleDetail.Vehicle.VehicleBrandName @vehicleDetail.Vehicle.VehicleModelName</h1>
-     
+
 </div>
+@if (response != null)
+{
+    <message-box is-success="@response.IsSuccess" message="@response.Message"></message-box>
+}
 
 <div class="row">
     <div class="col-8">
@@ -17,10 +22,10 @@
             <div class="col-12">
                 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
-                        @for (int i=0; i< vehicleDetail.VehicleImages.Count;i++)
+                        @for (int i = 0; i < vehicleDetail.VehicleImages.Count; i++)
                         {
                             <div class="carousel-item @(i == 0 ? "active": "")">
-                                <img src="/@vehicleDetail.VehicleImages[i].ImageUrl" class="d-block w-100" 
+                                <img src="/@vehicleDetail.VehicleImages[i].ImageUrl" class="d-block w-100"
                                      alt="@vehicleDetail.Vehicle.VehicleBrandName @vehicleDetail.Vehicle.VehicleModelName">
                             </div>
                         }
@@ -40,7 +45,7 @@
             <div class="col-12">
                 <h2>Araç Özellikleri</h2>
                 <table class="table table-striped">
-        
+
                     <tbody>
                         <tr>
                             <th scope="row"><label class="control-label">Araç Sınıfı:</label></th>
@@ -86,58 +91,61 @@
     <div class="col-4">
         <div class="row">
             <div class="col-12">
-                
+
 
             </div>
         </div>
-            <div class="row">
-                <div class="card bg-light mb-3" style="max-width: 18rem;">
-                    <div class="card-header">Kiralama İşlemleri</div>
-                    <div class="card-body">
-                        <h5 class="card-title">Fiyatlar</h5>
-                        <div class="card-text">
-                            @foreach (var vehicleRentalPrice in vehicleDetail.VehicleRentalPrices)
+        <div class="row">
+            <div class="card bg-light mb-3" style="max-width: 18rem;">
+                <div class="card-header">Kiralama İşlemleri</div>
+                <div class="card-body">
+                    <h5 class="card-title">Fiyatlar</h5>
+                    <div class="card-text">
+                        @foreach (var vehicleRentalPrice in vehicleDetail.VehicleRentalPrices)
+                        {
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item">@vehicleRentalPrice.RentalPeriodName:</li>
+                                <li class="list-group-item">@vehicleRentalPrice.Price.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</li>
+                            </ul>
+                        }
+                    </div>
+
+                    <h5 class="card-title">Kiralama Bilgileri</h5>
+                    <div class="card-text">
+                        <form method="post">
+                            @Html.HiddenFor(model => model.VehicleId)
+                            <div class="form-group">
+
+                                <label asp-for="DeliveryDate" class="control-label"></label>
+                                <input asp-for="DeliveryDate" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="ReturnDate" class="control-label"></label>
+                                <input asp-for="ReturnDate" class="form-control" />
+                            </div>
+                            <input type="submit" value="Hesapla " class="btn btn-primary btn-block"
+                                   asp-action="Calculate" asp-controller="Vehicle" />
+                            @if (Model.Amount.HasValue)
                             {
-                                <ul class="list-group list-group-horizontal">
-                                    <li class="list-group-item">@vehicleRentalPrice.RentalPeriodName:</li>
-                                    <li class="list-group-item">@vehicleRentalPrice.Price.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</li>
-                                </ul>
+                                @Html.HiddenFor(model => model.NumberOfDays)
+                                @Html.HiddenFor(model => model.VehicleRentalPriceId)
+                                
+                                <div class="form-group">
+                                    <label asp-for="Amount" class="control-label"></label>
+                                    <input asp-for="Amount" readonly="readonly" class="form-control" />
+                                </div>
+                                <input type="submit" value="Kirala" class="btn btn-success btn-block"
+                                       asp-action="Rent" asp-controller="Vehicle" />
                             }
-                        </div>
-
-                        <h5 class="card-title">Kiralama Bilgileri</h5>
-                        <div class="card-text">
-                            <form method="post">
-                                @Html.HiddenFor(model => model.VehicleId)
-                                <div class="form-group">
-                                   
-                                    <label asp-for="DeliveryDate" class="control-label"></label>
-                                    <input asp-for="DeliveryDate" class="form-control" />
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="ReturnDate" class="control-label"></label>
-                                    <input asp-for="ReturnDate" class="form-control" />
-                                </div>
-                                <input type="submit" value="Hesapla " class="btn btn-primary btn-block"
-                                       asp-action="Calculate" asp-controller="Vehicle" />
-                                @if (Model.Amount.HasValue)
-                                {
-                                    <div class="form-group">
-                                        <label asp-for="Amount" class="control-label"></label>
-                                        <input asp-for="Amount" readonly="readonly" class="form-control" />
-                                    </div>
-                                    <input type="submit" value="Kirala" class="btn btn-success btn-block" 
-                                           asp-action="Rent" asp-controller="Vehicle"/>
-                                }
 
 
 
 
-                            </form>
+                        </form>
 
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </div>

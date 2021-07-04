@@ -38,6 +38,8 @@ namespace Application
             services.AddScoped<IVehicleClassTypeService, VehicleClassTypeService>();
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IVehicleRentalPriceService, VehicleRentalPriceService>();
+            services.AddScoped<IVehicleRentalPriceCalculatorService, VehicleRentalPriceCalculatorService>();
+            services.AddScoped<IRentVehicleService, RentVehicleService>();
 
 
             return services;
