@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Application.Services
 {
-   public interface IVehicleRentalPriceCalculatorService
-    {
-        Response<decimal> Calculate(RentVehicleDTO rentVehicle);
-
-
-    } 
+   
+        public interface IVehicleRentalPriceCalculatorService
+        {
+            Response<VehicleRentalPriceCalculationResultDTO> Calculate(RentVehicleDTO rentVehicle);
+        }
+    
 }

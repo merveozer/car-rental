@@ -24,6 +24,19 @@ namespace Application.Services.Concrete
             return Response.Success("Renk başarıyla kaydedildi.");
         }
 
+        private Response CheckToAddOrUpdate(ColorType colorType)
+        {
+            int sameNumberOfRecords = (from b in Context.ColorType
+                                       where b.Name == colorType.Name && b.Id != colorType.Id
+                                       select b
+                                       ).Count();
+            if (sameNumberOfRecords > 0)
+            {
+                return Response.Fail($"{colorType.Name} renk sistemde zaten kayıtlıdır.");
+            }
+            return Response.Success();
+        }
+
         public Response Delete(int id)
         {
             var colorTypeToDelete = GetById(id);

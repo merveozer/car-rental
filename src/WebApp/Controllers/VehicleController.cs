@@ -9,6 +9,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApp.Areas.Admin.Controllers;
 using WebApp.Models;
+using Domain.Entities;
+using Application.Extensions;
 
 namespace WebApp.Controllers
 {
@@ -23,6 +25,8 @@ namespace WebApp.Controllers
         private ITransmissionTypeService TransmissionTypeService { get; }
         private IVehicleImageService VehicleImageService { get; }
         private IVehicleRentalPriceService VehicleRentalPriceService { get; }
+        private IVehicleRentalPriceCalculatorService VehicleRentalPriceCalculatorService {get;}
+        private IRentVehicleService RentVehicleService { get; }
 
         public VehicleController(IVehicleService vehicleService,
                                  IVehicleModelService vehicleModelService,
@@ -32,7 +36,9 @@ namespace WebApp.Controllers
                                  ITireTypeService tireTypeService,
                                  ITransmissionTypeService transmissionTypeService,
                                  IVehicleImageService vehicleImageService,
-                                 IVehicleRentalPriceService vehicleRentalPriceService)
+                                 IVehicleRentalPriceService vehicleRentalPriceService,
+                                 IVehicleRentalPriceCalculatorService vehicleRentalPriceCalculatorService,
+                                 IRentVehicleService rentVehicleService)
         {
             VehicleService = vehicleService;
             VehicleModelService = vehicleModelService;
@@ -43,6 +49,8 @@ namespace WebApp.Controllers
             TransmissionTypeService = transmissionTypeService;
             VehicleImageService = vehicleImageService;
             VehicleRentalPriceService = vehicleRentalPriceService;
+            VehicleRentalPriceCalculatorService = vehicleRentalPriceCalculatorService;
+            RentVehicleService = rentVehicleService;
         }
 
         public IActionResult Index()
@@ -75,16 +83,44 @@ namespace WebApp.Controllers
         [HttpPost]
         public IActionResult Calculate(RentVehicleDTO model)
         {
+
+            var calculationResponse = VehicleRentalPriceCalculatorService.Calculate(model);
+            if(calculationResponse.IsSuccess == false)
+            {
+                ViewBag.Response = Domain.DTOs.Response.Fail(calculationResponse.Message);
+            }
+            else
+            {
+                model.Amount =  calculationResponse.Data.Amount;
+                model.VehicleRentalPriceId = calculationResponse.Data.VehicleRentalPriceId;
+                model.NumberOfDays = calculationResponse.Data.NumberOfDays;
+
+            }
+
             SetVehicleDetailToViewBag(model.VehicleId);
-            model.Amount = 500;
             return View("Detail", model);
         }
 
         [HttpPost]
         public IActionResult Rent(RentVehicleDTO model)
         {
+            RentVehicle rentVehicle = new RentVehicle
+            {
+                Amount = model.Amount.Value,
+                CreatedDate = DateTime.Now,
+                DeliveryDate = model.DeliveryDate.Value,
+                NumberOfDays = model.NumberOfDays,
+                ReturnDate = model.ReturnDate.Value,
+                VehicleId = model.VehicleId,
+                VehicleRentalPriceId = model.VehicleRentalPriceId,
+                UserId = HttpContext.User.GetUserId()
+            };
+
+            var rentResponse = RentVehicleService.Add(rentVehicle);
+            ViewBag.Response = rentResponse;
+
             SetVehicleDetailToViewBag(model.VehicleId);
-            return View();
+            return View("Detail", model);
         }
 
         private void SetVehicleDetailToViewBag(int id)
