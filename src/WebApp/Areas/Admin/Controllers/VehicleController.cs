@@ -19,7 +19,7 @@ namespace WebApp.Areas.Admin.Controllers
         Roles = AuthenticationConstants.OperationClaims.AdminStr)]
     public class VehicleController : Controller
     {
-        private IVehicleService VehicleService { get; }
+        private IVehicleService VehicleService { get; } 
         private IVehicleBrandService VehicleBrandService { get; }
 
         private IVehicleModelService VehicleModelService { get; }

@@ -53,6 +53,7 @@ namespace WebApp.Controllers
             RentVehicleService = rentVehicleService;
         }
 
+    
         public IActionResult Index()
         {
             VehicleFilter filter = new VehicleFilter();
