@@ -43,6 +43,10 @@
                 Message = message
             };
         }
+
+        public class AppendHeader
+        {
+        }
     }
 }
 

@@ -30,10 +30,10 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            
-
             services.AddApplicationServices();
-
+            services.AddCors(options =>
+                             options.AddDefaultPolicy(builder =>
+                             builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
 
             services.AddAuthentication(AuthenticationConstants.AuthenticationScheme)
                 .AddCookie(o =>
@@ -42,13 +42,15 @@ namespace WebApp
                     o.ExpireTimeSpan = new TimeSpan(0, 10, 0);    //belli bir süre sonra (bu örnek için 0 saat 10 dakika 0 saniye sonra) çýkýþ yapýp oturumu kapatýyor...
                     o.LoginPath = "/auth/login";
 
-                });        
+                });
         }
 
         private int VehicleBrandService()
         {
             throw new NotImplementedException();
         }
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -64,11 +66,13 @@ namespace WebApp
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseCors();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
-            app.UseAuthentication();
-
+            
+           
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
